@@ -16,7 +16,7 @@ const FileList = observer(() => {
     <div className="flex flex-wrap p-6">
       {currentFolderImages?.length > 0 ? (
         currentFolderImages.map((file) => (
-          <div key={file.id} className="flex flex-wrap p-6">
+          <div key={file.id} className="flex flex-wrap p-2">
             <FilePreview file={file} />
           </div>
         ))
