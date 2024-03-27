@@ -2,30 +2,47 @@
 import { createContext, useContext } from "react";
 import { nanoid } from "nanoid";
 import { action, computed, makeAutoObservable, observable } from "mobx";
-import { getJSONFromStorage, storageKeys } from "../utils/storage";
+import {
+  getJSONFromStorage,
+  setInStorage,
+  storageKeys,
+} from "../utils/storage";
 
 export const DEFAULT_FOLDER_NAME = "Untitled Folder";
 export const DEFAULT_FOLDER_ID = "DEFAULT_FOLDER_ABC";
 
-export type File = { imagePath: string; caption?: string; id: string };
+export type Image = { imagePath: string; id: string; folderId: string };
 export type Folder = { name: string; id: string };
 
 export class AppStore {
+  currentFolderId: Folder["id"] = DEFAULT_FOLDER_ID;
   folders: Folder[] = [{ name: DEFAULT_FOLDER_NAME, id: DEFAULT_FOLDER_ID }];
+  /**
+   * Due to time constraint, keeping simple array, in real project might keep a Map with folderId as key
+   */
+  images: Image[] = [];
 
   constructor() {
     makeAutoObservable(this, {
       folders: observable,
       makeNewFolder: action,
       renameFolder: action,
+      setCurrentFolderId: action,
       totalFoldersCount: computed,
     });
 
     this.getFoldersFromStorage();
+    this.getImagesFromStorage();
   }
 
   get totalFoldersCount() {
     return this.folders?.length;
+  }
+
+  get currentFolderImages() {
+    return this.images.filter(
+      (image) => image.folderId === this.currentFolderId
+    );
   }
 
   async getFoldersFromStorage() {
@@ -39,11 +56,25 @@ export class AppStore {
     }
   }
 
-  async makeNewFolder(name: string) {
-    this.folders.push({ name, id: nanoid() });
+  async getImagesFromStorage() {
+    const updatedImagesInStorage = (await getJSONFromStorage(
+      storageKeys.IMAGES,
+      []
+    )) as Image[];
+
+    if (updatedImagesInStorage) {
+      this.images = updatedImagesInStorage;
+    }
   }
 
-  async renameFolder({
+  makeNewFolder(name: string) {
+    const newFolder: Folder = { name, id: nanoid() };
+    this.folders.push(newFolder);
+
+    this.syncToStorage();
+  }
+
+  renameFolder({
     folderId,
     updatedName,
   }: {
@@ -54,6 +85,29 @@ export class AppStore {
     if (foundFolder) {
       foundFolder.name = updatedName;
     }
+
+    this.syncToStorage();
+  }
+
+  addImage(image: Image) {
+    this.images.push(image);
+    this.syncToStorage();
+  }
+
+  moveTo({ folderId, imageId }: { folderId: string; imageId: string }) {
+    this.images.find((image) => image.id === imageId)!.folderId = folderId;
+    this.syncToStorage();
+  }
+
+  setCurrentFolderId(folderId: Folder["id"]) {
+    this.currentFolderId = folderId;
+  }
+
+  // Due to lack of time, had to sync to storage non-granularly
+  // with more time, would do it more granularly though.
+  syncToStorage() {
+    setInStorage(storageKeys.FOLDERS, this.folders);
+    setInStorage(storageKeys.IMAGES, this.images);
   }
 }
 
