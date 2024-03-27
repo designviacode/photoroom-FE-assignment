@@ -9,7 +9,7 @@ export const Sidebar = () => {
     <div className="app-sidebar flex flex-col h-dvh w-[350px] border-l border-gray-200 bg-gray-100 p-5 pt-6 space-y-3">
       <img src={photoroomLogo} width={150} className="pb-2" />
 
-      <div className="pt-10">
+      <div className="pt-10 space-y-2">
         <Button className="w-full border border-slate-300 rounded-md p-2">
           New Folder
         </Button>
