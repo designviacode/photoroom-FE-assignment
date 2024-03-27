@@ -53,14 +53,24 @@ function App() {
   };
 
   return (
-    <div>
+    <div className="flex w-full">
       <Sidebar />
-      {!result && <AddButton onImageAdd={onImageAdd} />}
-      {result && (
-        <div className="flex items-center justify-center h-screen w-screen">
-          <img src={result} className="block w-80" alt="result from the API" />
+
+      <div className="app-content flex flex-col w-full h-screen pb-10 overflow-auto">
+        <div className="w-full flex justify-end py-4 px-8 sticky top-0 bg-white z-[1]">
+          {!result && <AddButton onImageAdd={onImageAdd} />}
         </div>
-      )}
+
+        {result && (
+          <div className="flex items-center justify-center h-screen w-screen">
+            <img
+              src={result}
+              className="block w-80"
+              alt="result from the API"
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

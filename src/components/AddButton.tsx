@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import startImg from "./startButton.svg";
+import { Plus } from "lucide-react";
 
 export default function AddButton({
   onImageAdd,
@@ -8,7 +8,7 @@ export default function AddButton({
 }): JSX.Element {
   return (
     <label
-      className="flex items-center justify-center cursor-pointer w-screen h-screen"
+      className="flex items-center justify-center cursor-pointer transition-all text-white bg-indigo-700 hover:bg-indigo-900 hover:-translate-y-1 font-medium tracking-wide p-4 px-6 rounded-full shadow-lg"
       htmlFor="customFileAdd"
     >
       <input
@@ -18,7 +18,8 @@ export default function AddButton({
         id="customFileAdd"
         accept=".png, .jpg, .jpeg"
       />
-      <img src={startImg} alt="" className="w-32 h-auto z-1" />
+      <Plus className="mr-2" />
+      Upload Image
     </label>
   );
 }
