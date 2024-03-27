@@ -4,9 +4,12 @@ import AddButton from "./components/AddButton";
 import loadImage, { LoadImageResult } from "blueimp-load-image";
 import { API_KEY, API_URL, BASE64_IMAGE_HEADER } from "./constants";
 import { FilePreview } from "./components/FilePreview";
+import { AppStore, AppStoreProvider } from "./store/appStore";
+import { nanoid } from "nanoid";
 
 function App() {
-  const [result, setResult] = useState<string | null>(null);
+  const [appStore] = useState(() => new AppStore());
+  const [uploadedImages, updateUploadedImages] = useState<File[]>([]);
 
   const uploadImageToServer = (file: File) => {
     loadImage(file, {
@@ -37,7 +40,10 @@ function App() {
 
         const result = await response.json();
         const base64Result = BASE64_IMAGE_HEADER + result.result_b64;
-        setResult(base64Result);
+        updateUploadedImages([
+          ...uploadedImages,
+          { imagePath: base64Result, id: nanoid },
+        ]);
       })
 
       .catch((error) => {
@@ -54,26 +60,23 @@ function App() {
   };
 
   return (
-    <div className="flex w-full">
-      <Sidebar />
+    <AppStoreProvider store={appStore}>
+      <div className="flex w-full">
+        <Sidebar />
 
-      <div className="app-content flex flex-col w-full h-screen pb-10 overflow-auto">
-        <div className="w-full flex justify-end py-4 px-8 sticky top-0 bg-white z-[1]">
-          <AddButton onImageAdd={onImageAdd} />
-        </div>
-
-        {result && (
-          <div className="flex flex-wrap p-6">
-            <FilePreview image={result} />
-            {/* <img
-              src={result}
-              className="block w-80"
-              alt="result from the API"
-            /> */}
+        <div className="app-content flex flex-col w-full h-screen pb-10 overflow-auto">
+          <div className="w-full flex justify-end py-4 px-8 sticky top-0 bg-white z-[1]">
+            <AddButton onImageAdd={onImageAdd} />
           </div>
-        )}
+
+          {uploadedImages?.map((file) => (
+            <div className="flex flex-wrap p-6">
+              <FilePreview file={file} />
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </AppStoreProvider>
   );
 }
 

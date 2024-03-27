@@ -1,15 +1,16 @@
+import { File } from "@/store/appStore";
 import { Card } from "../ui/card";
 
 export type FilePreviewProps = {
-  image: string;
+  file: File;
 };
 
-export const FilePreview = ({ image }: FilePreviewProps) => {
+export const FilePreview = ({ file }: FilePreviewProps) => {
   return (
     <div className="w-[250px] hover:shadow-xl cursor-pointer transition-all">
       <Card className="group">
         <img
-          src={image}
+          src={file?.imagePath}
           alt="result from the API"
           style={{
             display: "block",

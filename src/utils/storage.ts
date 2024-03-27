@@ -5,12 +5,22 @@ export const storageKeys = {
   IMAGES: "photoroom_images",
 };
 
-export const getFromStorage = async (key: string) => {
+/**
+ * In real world project, I would make these functions more type safe
+ */
+
+export const getJSONFromStorage = async (
+  key: string,
+  defaultValue?: unknown
+) => {
   try {
-    const data = await localforage.getItem(key);
+    const data = await JSON.parse(
+      (await localforage.getItem(key)) as unknown as string
+    );
     return data;
   } catch (err) {
     console.error(err);
+    return defaultValue;
   }
 };
 
