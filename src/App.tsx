@@ -3,6 +3,7 @@ import { Sidebar } from "./components/Sidebar";
 import AddButton from "./components/AddButton";
 import loadImage, { LoadImageResult } from "blueimp-load-image";
 import { API_KEY, API_URL, BASE64_IMAGE_HEADER } from "./constants";
+import { FilePreview } from "./components/FilePreview";
 
 function App() {
   const [result, setResult] = useState<string | null>(null);
@@ -58,16 +59,17 @@ function App() {
 
       <div className="app-content flex flex-col w-full h-screen pb-10 overflow-auto">
         <div className="w-full flex justify-end py-4 px-8 sticky top-0 bg-white z-[1]">
-          {!result && <AddButton onImageAdd={onImageAdd} />}
+          <AddButton onImageAdd={onImageAdd} />
         </div>
 
         {result && (
-          <div className="flex items-center justify-center h-screen w-screen">
-            <img
+          <div className="flex flex-wrap p-6">
+            <FilePreview image={result} />
+            {/* <img
               src={result}
               className="block w-80"
               alt="result from the API"
-            />
+            /> */}
           </div>
         )}
       </div>

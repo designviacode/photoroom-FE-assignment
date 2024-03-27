@@ -6,16 +6,18 @@ const DEFAULT_FOLDER_NAME = "Untitled Folder";
 
 export const Sidebar = () => {
   return (
-    <div className="app-sidebar flex flex-col h-dvh w-[350px] border-l border-gray-200 bg-gray-100 p-5 pt-10 space-y-3">
+    <div className="app-sidebar flex flex-col h-dvh w-[350px] border-l border-gray-200 bg-gray-100 p-5 pt-6 space-y-3">
       <img src={photoroomLogo} width={150} className="pb-2" />
 
-      <Button className="w-full border border-slate-300 rounded-md p-2">
-        New Folder
-      </Button>
+      <div className="pt-10">
+        <Button className="w-full border border-slate-300 rounded-md p-2">
+          New Folder
+        </Button>
 
-      <SidebarButton />
-      <SidebarButton text="Folder 2" />
-      <SidebarButton text="Folder 2" />
+        <SidebarButton />
+        <SidebarButton text="Folder 2" />
+        <SidebarButton text="Folder 2" />
+      </div>
     </div>
   );
 };
