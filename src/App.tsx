@@ -8,6 +8,7 @@ import { AppStore, AppStoreProvider, useAppStore } from "./store/appStore";
 import { nanoid } from "nanoid";
 import { observer } from "mobx-react-lite";
 import { EmptyState } from "./components/EmptyState";
+import { RenameFolderDialog } from "./components/RenameFolderDialog";
 
 const FileList = observer(() => {
   const { currentFolderImages } = useAppStore();
@@ -29,6 +30,7 @@ const FileList = observer(() => {
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
+  const [renamingFolderId, setRenamingFolderId] = useState<string>("");
   const [appStore] = useState(() => new AppStore());
 
   const getUploadedImageAsBase64 = async (
@@ -93,7 +95,7 @@ function App() {
   return (
     <AppStoreProvider store={appStore}>
       <div className="flex w-full">
-        <Sidebar />
+        <Sidebar onRename={setRenamingFolderId} />
 
         <div className="app-content flex flex-col w-full h-screen pb-10 overflow-auto">
           <div className="w-full flex justify-end py-4 px-8 sticky top-0 bg-white z-[1]">
@@ -102,6 +104,12 @@ function App() {
 
           <FileList />
         </div>
+
+        <RenameFolderDialog
+          isOpen={Boolean(renamingFolderId)}
+          folderId={renamingFolderId}
+          onClose={() => setRenamingFolderId("")}
+        />
       </div>
     </AppStoreProvider>
   );

@@ -1,7 +1,13 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext } from "react";
 import { nanoid } from "nanoid";
-import { action, computed, makeAutoObservable, observable } from "mobx";
+import {
+  action,
+  computed,
+  makeAutoObservable,
+  observable,
+  runInAction,
+} from "mobx";
 import {
   getJSONFromStorage,
   setInStorage,
@@ -52,7 +58,9 @@ export class AppStore {
     )) as Folder[];
 
     if (updatedFoldersInStorage) {
-      this.folders = updatedFoldersInStorage;
+      runInAction(() => {
+        this.folders = updatedFoldersInStorage;
+      });
     }
   }
 
@@ -63,7 +71,9 @@ export class AppStore {
     )) as Image[];
 
     if (updatedImagesInStorage) {
-      this.images = updatedImagesInStorage;
+      runInAction(() => {
+        this.images = updatedImagesInStorage;
+      });
     }
   }
 

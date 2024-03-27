@@ -19,13 +19,13 @@ export const FilePreview = observer(({ file }: FilePreviewProps) => {
 
   return (
     <div className="relative h-[250px] w-[250px] hover:shadow-xl cursor-pointer transition-all">
-      <Card className="group w-full h-full">
+      <Card className="group w-full h-full overflow-hidden">
         <img
           src={file?.imagePath}
           alt="result from the API"
           style={{
             display: "block",
-            objectFit: "contain",
+            objectFit: "cover",
             height: "100%",
             width: "100%",
             backgroundColor: "var(--gray-5)",
