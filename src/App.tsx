@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from "react";
+import { Sidebar } from "./components/Sidebar";
 import AddButton from "./components/AddButton";
 import loadImage, { LoadImageResult } from "blueimp-load-image";
 import { API_KEY, API_URL, BASE64_IMAGE_HEADER } from "./constants";
@@ -53,6 +54,7 @@ function App() {
 
   return (
     <div>
+      <Sidebar />
       {!result && <AddButton onImageAdd={onImageAdd} />}
       {result && (
         <div className="flex items-center justify-center h-screen w-screen">
