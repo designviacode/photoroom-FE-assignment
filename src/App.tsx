@@ -28,12 +28,14 @@ const FileList = observer(() => {
 });
 
 function App() {
+  const [isLoading, setIsLoading] = useState(false);
   const [appStore] = useState(() => new AppStore());
 
   const getUploadedImageAsBase64 = async (
     file: File
   ): Promise<string | null> => {
     try {
+      setIsLoading(true);
       const imageData: LoadImageResult = await loadImage(file, {
         maxWidth: 400,
         maxHeight: 400,
@@ -54,6 +56,7 @@ function App() {
         },
         body: JSON.stringify(data),
       });
+      setIsLoading(false);
 
       if (response.status >= 400 && response.status < 600) {
         throw new Error("Bad response from server");
@@ -61,9 +64,11 @@ function App() {
 
       const result = await response.json();
       const base64Result = BASE64_IMAGE_HEADER + result.result_b64;
+
       return base64Result;
     } catch (error) {
       console.error("Error uploading image", error);
+      setIsLoading(false);
       return null;
     }
   };
@@ -92,7 +97,7 @@ function App() {
 
         <div className="app-content flex flex-col w-full h-screen pb-10 overflow-auto">
           <div className="w-full flex justify-end py-4 px-8 sticky top-0 bg-white z-[1]">
-            <AddButton onImageAdd={onImageAdd} />
+            <AddButton onImageAdd={onImageAdd} isLoading={isLoading} />
           </div>
 
           <FileList />

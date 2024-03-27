@@ -1,10 +1,12 @@
 import { ChangeEvent } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Loader } from "lucide-react";
 
 export default function AddButton({
   onImageAdd,
+  isLoading = false,
 }: {
   onImageAdd: (event: ChangeEvent<HTMLInputElement>) => void;
+  isLoading?: boolean;
 }): JSX.Element {
   return (
     <label
@@ -18,8 +20,12 @@ export default function AddButton({
         id="customFileAdd"
         accept=".png, .jpg, .jpeg"
       />
-      <Plus className="mr-2" />
-      Upload Image
+      {isLoading ? (
+        <Loader className="animate-spin mr-2" />
+      ) : (
+        <Plus className="mr-2" />
+      )}
+      {isLoading ? "Uploading.." : "Upload Image"}
     </label>
   );
 }
